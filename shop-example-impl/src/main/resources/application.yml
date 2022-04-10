@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    ROOT: INFO
+    love.korni: DEBUG
+    love.korni.shopexample: TRACE
+
+spring:
+  jackson: com.fasterxml.jackson.databind.util.ISO8601DateFormat
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:file:./shopexample
+    username: user
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+      naming:
+        physical-strategy: love.korni.shopexample.jpa.NamingStrategy
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+    show-sql: false
