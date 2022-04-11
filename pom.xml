@@ -35,6 +35,8 @@
         <hibernate-core.version>5.4.18.Final</hibernate-core.version>
 
         <lombok.version>1.18.22</lombok.version>
+        <springdoc-openapi-ui.version>1.6.7</springdoc-openapi-ui.version>
+        <orika-spring-boot-starter.version>2.2.6</orika-spring-boot-starter.version>
     </properties>
 
     <dependencyManagement>
@@ -93,10 +95,25 @@
 
             <!-- Util -->
             <dependency>
+                <groupId>dev.akkinoc.spring.boot</groupId>
+                <artifactId>orika-spring-boot-starter</artifactId>
+                <version>${orika-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
                 <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-ui</artifactId>
+                <version>${springdoc-openapi-ui.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-security</artifactId>
+                <version>${springdoc-openapi-ui.version}</version>
             </dependency>
 
             <!-- Test -->
