@@ -1,9 +1,16 @@
 package love.korni.shopexample.resource;
 
 import love.korni.shopexample.dto.CoffeeDto;
+import love.korni.shopexample.dto.ErrorResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,35 +28,112 @@ import java.util.List;
  *
  * @author Sergei_Konilov
  */
-
+@Tag(name = "Coffee Resource", description = "Coffee API")
 @RequestMapping("/api/v1/coffee")
 public interface CoffeeResource {
 
-    @Operation(summary = "Add new type of coffee", security = @SecurityRequirement(name = "basicSecurity"))
+    @Operation(summary = "Add new type of coffee to the store", description = "Security: ADMIN",
+            security = @SecurityRequirement(name = "basicSecurity"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CoffeeDto.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+    })
     @PostMapping
     CoffeeDto create(@RequestBody CoffeeDto coffeeDto);
 
     @Operation(summary = "Get coffee by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CoffeeDto.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+    })
     @GetMapping("/{id}")
     CoffeeDto getCoffee(@PathVariable Long id);
 
     @Operation(summary = "Get list of available coffees")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CoffeeDto.class)))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+    })
     @GetMapping
     List<CoffeeDto> getCoffees();
 
     @Operation(summary = "Get coffee image by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = {
+                    @Content(mediaType = "image/jpeg")
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+    })
     @GetMapping(value = "/img/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
     ResponseEntity<byte[]> getCoffeeImg(@PathVariable Long id);
 
-    @Operation(summary = "Add coffee image by id", security = @SecurityRequirement(name = "basicSecurity"))
+    @Operation(summary = "Add coffee image by id", description = "Security: ADMIN",
+            security = @SecurityRequirement(name = "basicSecurity"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+    })
     @PostMapping(value = "/img/{id}", consumes = MediaType.IMAGE_JPEG_VALUE)
     ResponseEntity<?> addCoffeeImg(@PathVariable Long id, @RequestBody byte[] img);
 
-    @Operation(summary = "Update coffee", security = @SecurityRequirement(name = "basicSecurity"))
+    @Operation(summary = "Update coffee", description = "Security: ADMIN",
+            security = @SecurityRequirement(name = "basicSecurity"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CoffeeDto.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+    })
     @PutMapping
     CoffeeDto update(@RequestBody CoffeeDto coffeeDto);
 
-    @Operation(summary = "Remove coffee by id", security = @SecurityRequirement(name = "basicSecurity"))
+    @Operation(summary = "Remove coffee by id", description = "Security: ADMIN",
+            security = @SecurityRequirement(name = "basicSecurity"))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+    })
     @DeleteMapping("/{id}")
     ResponseEntity<?> remove(@PathVariable Long id);
 

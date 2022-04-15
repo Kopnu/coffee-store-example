@@ -1,5 +1,6 @@
 package love.korni.shopexample.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -20,5 +21,6 @@ public class OrderDto {
 
     private UserDto customer;
 
+    @Schema(description = "Order status", example = "NEW")
     private String status;
 }

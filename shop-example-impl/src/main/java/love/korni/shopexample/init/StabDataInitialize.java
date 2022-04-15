@@ -26,12 +26,15 @@ public class StabDataInitialize implements InitializerService {
 
     @Override
     public void initialize() {
-        List<Coffee> coffees = List.of(
-                createCoffee("Americano", "https://denewlanmarkhotel.com/wp-content/uploads/2020/05/americana-coffee.jpg"),
-                createCoffee("Latte", "https://st2.depositphotos.com/5355656/7824/i/950/depositphotos_78249960-stock-photo-hot-cafe-latte-and-coffee.jpg"),
-                createCoffee("Espresso", "https://www.acouplecooks.com/wp-content/uploads/2020/09/Latte-Art-066s.jpg")
-        );
-        coffees.forEach(coffeeService::create);
+        boolean empty = coffeeService.findAll().isEmpty();
+        if (empty) {
+            List<Coffee> coffees = List.of(
+                    createCoffee("Americano", "https://denewlanmarkhotel.com/wp-content/uploads/2020/05/americana-coffee.jpg"),
+                    createCoffee("Latte", "https://st2.depositphotos.com/5355656/7824/i/950/depositphotos_78249960-stock-photo-hot-cafe-latte-and-coffee.jpg"),
+                    createCoffee("Espresso", "https://www.acouplecooks.com/wp-content/uploads/2020/09/Latte-Art-066s.jpg")
+            );
+            coffees.forEach(coffeeService::create);
+        }
     }
 
     @SneakyThrows

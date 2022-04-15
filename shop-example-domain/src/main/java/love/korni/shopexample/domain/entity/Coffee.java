@@ -7,8 +7,10 @@ import lombok.experimental.Accessors;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.SequenceGenerator;
 
 /**
  * Coffee
@@ -21,7 +23,8 @@ import javax.persistence.Lob;
 public class Coffee {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "coffee_default_seq")
+    @SequenceGenerator(name = "coffee_default_seq", sequenceName = "coffee_default_seq", allocationSize = 1)
     private Long id;
 
     private String coffeeName;
