@@ -3,19 +3,22 @@ package love.korni.shopexample.dto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 /**
- * CoffeeDto
+ * OrderDto
  *
  * @author Sergei_Konilov
  */
 @Data
 @Accessors(chain = true)
-public class CoffeeDto {
+public class OrderDto {
 
     private Long id;
 
-    private String coffeeName;
+    private List<CoffeeDto> coffees;
 
-    private Double cost;
+    private UserDto customer;
 
+    private String status;
 }

@@ -4,10 +4,12 @@ import love.korni.shopexample.domain.entity.Coffee;
 import love.korni.shopexample.dto.CoffeeDto;
 import love.korni.shopexample.resource.CoffeeResource;
 import love.korni.shopexample.service.CoffeeService;
+import love.korni.shopexample.service.SecurityService;
 
 import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,9 +25,11 @@ public class CoffeeResourceImpl implements CoffeeResource {
 
     private final CoffeeService coffeeService;
     private final MapperFacade mapperFacade;
+    private final SecurityService securityService;
 
     @Override
     public CoffeeDto create(CoffeeDto coffeeDto) {
+        securityService.checkIsAdmin();
         Coffee coffee = mapperFacade.map(coffeeDto, Coffee.class);
         return mapperFacade.map(coffeeService.create(coffee), CoffeeDto.class);
     }
@@ -48,6 +52,7 @@ public class CoffeeResourceImpl implements CoffeeResource {
 
     @Override
     public ResponseEntity<?> addCoffeeImg(Long id, byte[] img) {
+        securityService.checkIsAdmin();
         Coffee coffee = coffeeService.find(id);
         coffee.setImg(img);
         coffeeService.update(coffee);
@@ -56,12 +61,14 @@ public class CoffeeResourceImpl implements CoffeeResource {
 
     @Override
     public CoffeeDto update(CoffeeDto coffeeDto) {
+        securityService.checkIsAdmin();
         Coffee coffee = mapperFacade.map(coffeeDto, Coffee.class);
         return mapperFacade.map(coffeeService.update(coffee), CoffeeDto.class);
     }
 
     @Override
     public ResponseEntity<?> remove(Long id) {
+        securityService.checkIsAdmin();
         coffeeService.delete(id);
         return ResponseEntity.ok().build();
     }

@@ -37,6 +37,7 @@
         <lombok.version>1.18.22</lombok.version>
         <springdoc-openapi-ui.version>1.6.7</springdoc-openapi-ui.version>
         <orika-spring-boot-starter.version>2.2.6</orika-spring-boot-starter.version>
+        <commons-io.version>2.11.0</commons-io.version>
     </properties>
 
     <dependencyManagement>
@@ -114,6 +115,11 @@
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-security</artifactId>
                 <version>${springdoc-openapi-ui.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
             </dependency>
 
             <!-- Test -->

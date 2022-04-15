@@ -4,18 +4,14 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * CoffeeDto
+ * UserDto
  *
  * @author Sergei_Konilov
  */
 @Data
 @Accessors(chain = true)
-public class CoffeeDto {
+public class UserDto {
 
-    private Long id;
-
-    private String coffeeName;
-
-    private Double cost;
+    private String name;
 
 }

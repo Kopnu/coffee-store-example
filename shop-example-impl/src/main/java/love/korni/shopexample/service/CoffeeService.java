@@ -17,6 +17,8 @@ public interface CoffeeService {
 
     List<Coffee> findAll();
 
+    List<Coffee> findAll(List<Long> ids);
+
     Coffee update(Coffee coffee);
 
     void delete(Long id);

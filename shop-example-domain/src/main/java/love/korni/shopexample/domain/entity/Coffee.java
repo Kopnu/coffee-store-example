@@ -1,6 +1,8 @@
 package love.korni.shopexample.domain.entity;
 
 import lombok.Data;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +17,7 @@ import javax.persistence.Lob;
  */
 @Data
 @Entity
+@Accessors(chain = true)
 public class Coffee {
 
     @Id
@@ -27,6 +30,7 @@ public class Coffee {
 
     @Lob
     @Column(length = Integer.MAX_VALUE, columnDefinition = "BLOB")
+    @ToString.Exclude
     private byte[] img;
 
 }

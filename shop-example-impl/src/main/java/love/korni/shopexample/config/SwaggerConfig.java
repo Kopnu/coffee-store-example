@@ -24,7 +24,12 @@ public class SwaggerConfig {
                         .version("v0.0.1")
                         .license(new License().name("Apache 2.0")))
                 .components(new Components()
-                        .addSecuritySchemes("basicScheme", new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")));
+                        .addSecuritySchemes("basicSecurity",
+                                new SecurityScheme()
+                                        .scheme("basic")
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .in(SecurityScheme.In.HEADER)
+                        ));
     }
 
 }

@@ -1,16 +1,24 @@
 package love.korni.shopexample.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.users.AbstractRole;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+import java.util.List;
 
 /**
  * SecurityConfig
@@ -20,6 +28,7 @@ import org.springframework.web.filter.CorsFilter;
 @Slf4j
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] SECURITY_SWAGGER_MATCHERS = {
@@ -29,11 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] SECURITY_BOOT_MATCHERS = {
             "/actuator", "/actuator/**"
     };
-    private static final String[] SECURITY_LOGIN_MATCHERS = {
-            "/api/auth/login", "/api/auth/registration", "/verify-email*"
-    };
     private static final String[] SECURITY_FOR_ALL_MATCHERS = {
-            "/*"
+            "/api/v1/coffee"
     };
 
     @Value("${auth:}")
@@ -45,20 +51,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             log.warn("Auth is OFF");
             http.cors().and()
                     .csrf().disable()
-                    .anonymous().principal("guest")
+                    .anonymous().principal("guest").authorities("ROLE_GUEST")
                     .and().authorizeRequests().anyRequest().anonymous();
         } else {
             // @formatter:off
-        http.csrf().disable()
-            .authorizeRequests()
-                .antMatchers(SECURITY_SWAGGER_MATCHERS).permitAll()
-                .antMatchers(SECURITY_BOOT_MATCHERS).permitAll()
-                .antMatchers(SECURITY_LOGIN_MATCHERS).anonymous()
-                .antMatchers(SECURITY_FOR_ALL_MATCHERS).permitAll()
-                .anyRequest().authenticated()
-            .and()
-                .anonymous().principal("guest").authorities("READ")
-            .and().httpBasic();
+            http.cors().and().csrf().disable()
+                .authorizeRequests()
+                    .antMatchers(SECURITY_SWAGGER_MATCHERS).permitAll()
+                    .antMatchers(SECURITY_BOOT_MATCHERS).permitAll()
+                .and()
+                    .anonymous().principal("guest").authorities("ROLE_GUEST")
+                .and().httpBasic()
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         // @formatter:on
         }
     }
@@ -68,11 +72,39 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
+        config.addAllowedOriginPattern("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    @Override
+    public UserDetailsService userDetailsService() {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        UserDetails admin = User.builder()
+                .username("admin")
+                .password(encoder.encode("admin"))
+                .roles("ADMIN")
+                .build();
+        UserDetails user1 = User.builder()
+                .username("user1")
+                .password(encoder.encode("123"))
+                .roles("USER")
+                .build();
+        UserDetails user2 = User.builder()
+                .username("user2")
+                .password(encoder.encode("321"))
+                .roles("USER")
+                .build();
+
+        return new InMemoryUserDetailsManager(List.of(admin, user1, user2));
     }
 
 }

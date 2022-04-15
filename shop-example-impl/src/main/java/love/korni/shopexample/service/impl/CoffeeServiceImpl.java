@@ -1,13 +1,16 @@
 package love.korni.shopexample.service.impl;
 
 import love.korni.shopexample.domain.entity.Coffee;
+import love.korni.shopexample.exception.ValidationException;
 import love.korni.shopexample.repository.CoffeeRepository;
 import love.korni.shopexample.service.CoffeeService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * CoffeeServiceImpl
@@ -37,7 +40,13 @@ public class CoffeeServiceImpl implements CoffeeService {
     }
 
     @Override
+    public List<Coffee> findAll(List<Long> ids) {
+        return coffeeRepository.findAllById(ids);
+    }
+
+    @Override
     public Coffee update(Coffee coffee) {
+        if (Objects.isNull(coffee.getId())) throw new ValidationException("Coffee id cannot be empty.");
         return coffeeRepository.save(coffee);
     }
 
