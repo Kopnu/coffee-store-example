@@ -14,9 +14,9 @@
 1. Клонировать данный репозиторий <br>
    ``git clone https://github.com/Kopnu/coffee-store-example.git``
 2. Запустить командную строку из папки проекта
-3. ``mvnw clean package``
+3. ``./mvnw clean package``
 4. После завершения. Запустить приложение: 
-   ``java -jar ./shop-example-impl/target/shop-example-impl-0.0.1-SNAPSHOT-spring-boot.jar --add-opens java.base/java.lang=ALL-UNNAMED``
+   ``java --add-opens java.base/java.lang=ALL-UNNAMED -jar ./shop-example-impl/target/shop-example-impl-0.0.1-SNAPSHOT-spring-boot.jar``
 5. Проверить работоспособность зайдя в [API документацию](http://localhost:8080/swagger-ui/index.html#/) 
 
 ## Авторизация 
