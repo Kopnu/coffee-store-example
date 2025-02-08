@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+}
+
+dependencies {
+    implementation project(':shop-example-api')
+
+    /* Spring */
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    /* Dependencies */
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdoc_openapi_version}"
+    implementation 'org.hibernate.orm:hibernate-core:6.4.0.Final'
+    implementation 'org.liquibase:liquibase-core:4.24.0'
+    implementation 'com.h2database:h2:2.1.210'
+
+    /* Common */
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'org.apache.commons:commons-lang3:3.13.0'
+    implementation 'org.apache.commons:commons-collections4:4.4'
+
+    compileOnly "org.projectlombok:lombok:${lombok_version}"
+    implementation "org.mapstruct:mapstruct:${mapstruct_version}"
+    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombok_mapstruct_binding_version}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
+
+    /* Test */
+    testCompileOnly "org.projectlombok:lombok:${lombok_version}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombok_version}"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.security:spring-security-test"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junit_jupiter_version}"
+    testImplementation 'com.github.tomakehurst:wiremock:2.27.2'
+
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junit_jupiter_version}"
+}
+
+compileJava {
+    options.annotationProcessorPath = configurations.annotationProcessor
+    options.compilerArgs += [
+            '-Amapstruct.unmappedTargetPolicy=ERROR',
+            '-Amapstruct.defaultComponentModel=spring',
+            '-parameters'
+    ]
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        exceptionFormat 'full'
+    }
+    systemProperty 'file.encoding', 'UTF-8'
+    systemProperty "junit.jupiter.extensions.autodetection.enabled", "true"
+}
+
+tasks.named('bootBuildImage') {
+    builder = 'paketobuildpacks/builder-jammy-base:latest'
+}

@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.1.12' apply false
+    id 'io.spring.dependency-management' version '1.1.6' apply false
+    id 'org.liquibase.gradle' version '2.2.0' apply false
+}
+
+ext {
+    lombok_version = '1.18.32'
+    lombok_mapstruct_binding_version = '0.2.0'
+    mapstruct_version = '1.5.2.Final'
+    junit_jupiter_version = '5.8.1'
+    testcontainers_version = '1.20.4'
+    springdoc_openapi_version = '2.2.0'
+}
+
+allprojects {
+    group = 'love.korni'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '21'
+    compileJava.options.encoding = 'UTF-8'
+    compileTestJava.options.encoding = 'UTF-8'
+
+    repositories {
+        mavenCentral()
+    }
+
+}
+

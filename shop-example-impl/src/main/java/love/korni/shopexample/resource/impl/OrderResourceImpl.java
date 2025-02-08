@@ -3,15 +3,15 @@ package love.korni.shopexample.resource.impl;
 import love.korni.shopexample.domain.entity.Order;
 import love.korni.shopexample.dto.CreateOrderDto;
 import love.korni.shopexample.dto.OrderDto;
+import love.korni.shopexample.mapper.OrderMapper;
 import love.korni.shopexample.resource.OrderResource;
 import love.korni.shopexample.service.OrderService;
 import love.korni.shopexample.service.SecurityService;
 import love.korni.shopexample.util.BasicSecurityUtils;
 
 import lombok.RequiredArgsConstructor;
-import ma.glasnost.orika.MapperFacade;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,55 +27,66 @@ import java.util.List;
 public class OrderResourceImpl implements OrderResource {
 
     private final OrderService orderService;
-    private final MapperFacade mapperFacade;
     private final SecurityService securityService;
+    private final OrderMapper mapper;
 
     @Override
+    @PreAuthorize("hasRole('USER')")
     public OrderDto create(CreateOrderDto createOrderDto) {
         securityService.checkIsUser();
-        return mapperFacade.map(orderService.create(createOrderDto.getCoffees()), OrderDto.class);
+        return mapper.toDto(orderService.create(createOrderDto.getCoffees()));
     }
 
     @Override
+    @PreAuthorize("hasRole('USER')")
     public OrderDto getOrder(Long id) {
         securityService.checkIsUser();
         Order order = orderService.find(id);
         if (!checkOrderEligibility(order)) {
             return null;
         }
-        return mapperFacade.map(order, OrderDto.class);
+        return mapper.toDto(order);
     }
 
     @Override
+    @PreAuthorize("hasRole('USER')")
     public List<OrderDto> getOrders(String username) {
         securityService.checkIsUser();
         User user = BasicSecurityUtils.getUserFromContext();
         if (!user.getUsername().equals(username)) {
             return List.of();
         }
-        return mapperFacade.mapAsList(orderService.find(username), OrderDto.class);
+        return orderService.find(username).stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public List<OrderDto> getOrders() {
         securityService.checkIsAdmin();
-        return mapperFacade.mapAsList(orderService.findAll(), OrderDto.class);
+        return orderService.findAll().stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
     @Override
+    @PreAuthorize("hasRole('USER')")
     public OrderDto confirmOrder(Long id) {
         securityService.checkIsUser();
-        return mapperFacade.map(orderService.confirm(id), OrderDto.class);
+        return mapper.toDto(orderService.confirm(id));
     }
 
     @Override
+    @PreAuthorize("hasRole('USER')")
     public OrderDto update(OrderDto orderDto) {
         securityService.checkIsUser();
-        Order order = mapperFacade.map(orderDto, Order.class);
-        return mapperFacade.map(orderService.update(order), OrderDto.class);
+        Order order = mapper.toEntity(orderDto);
+        return mapper.toDto(orderService.update(order));
     }
 
     @Override
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> remove(Long id) {
         securityService.checkIsUser();
         orderService.delete(id);

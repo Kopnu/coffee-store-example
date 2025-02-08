@@ -2,6 +2,13 @@
 Это пример back-end части web приложения - магазина по продаже кофе. Написан с целью самообучения FE разработчиков. 
 
 ## Запуск
+### Запуск из исходников в докере
+0. Клонировать данный репозиторий <br>
+   ``git clone git@github.com:Kopnu/coffee-store-example.git``
+1. Запустить docker-compose <br>
+   ``docker compose up -d --build``
+2. Проверить работоспособность зайдя в [API документацию](http://localhost:8080/swagger-ui/index.html#/)
+
 ### Запуск из Jar
 0. Установить [Java 17](https://www.oracle.com/java/technologies/downloads/#jdk17-windows), если не установлена.
 1. Скачать последний релиз [отсюда](https://github.com/Kopnu/coffee-store-example/releases/tag/v0.0.1)
@@ -12,7 +19,7 @@
 ### Запуск из исходников
 0. Установить [Java 17](https://www.oracle.com/java/technologies/downloads/#jdk17-windows), если не установлена.
 1. Клонировать данный репозиторий <br>
-   ``git clone https://github.com/Kopnu/coffee-store-example.git``
+   ``git clone git@github.com:Kopnu/coffee-store-example.git``
 2. Запустить командную строку из папки проекта
 3. ``./mvnw clean package``
 4. После завершения. Запустить приложение: 

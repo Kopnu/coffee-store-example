@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 *.mv.db
 *.trace.db
+.gradle
 
 ### STS ###
 .apt_generated
@@ -33,3 +34,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+uploads
+shop-volume

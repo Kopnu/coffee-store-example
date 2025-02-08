@@ -1,0 +1,10 @@
+services:
+  coffee-shop:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./shop-volume/uploads:/uploads

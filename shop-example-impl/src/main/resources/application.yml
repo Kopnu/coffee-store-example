@@ -8,18 +8,22 @@ logging:
     love.korni.shopexample: TRACE
 
 spring:
-  jackson: com.fasterxml.jackson.databind.util.ISO8601DateFormat
   datasource:
     driverClassName: org.h2.Driver
-    url: jdbc:h2:file:./shopexample
+    url: jdbc:h2:file:./uploads/shopexample
     username: user
     password: password
+  liquibase:
+    url: jdbc:h2:file:./uploads/shopexample
+    user: user
+    password: password
+    change-log: db/changelog/database_coffee_shop_changelog.xml
+    enabled: true
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: validate
       naming:
-        physical-strategy: love.korni.shopexample.jpa.NamingStrategy
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
     show-sql: false
 

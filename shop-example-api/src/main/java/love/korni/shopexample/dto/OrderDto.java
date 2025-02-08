@@ -15,12 +15,15 @@ import java.util.List;
 @Accessors(chain = true)
 public class OrderDto {
 
+    @Schema(description = "Идентификатор заказа")
     private Long id;
 
+    @Schema(description = "Список кофе")
     private List<CoffeeDto> coffees;
 
-    private UserDto customer;
+    @Schema(description = "Имя покупателя", example = "User")
+    private String customer;
 
-    @Schema(description = "Order status", example = "NEW")
-    private String status;
+    @Schema(description = "Статус", example = "NEW")
+    private OrderStatusDto status;
 }

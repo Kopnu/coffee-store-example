@@ -5,8 +5,6 @@
 
 package love.korni.shopexample.dto;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.time.OffsetDateTime;
@@ -16,13 +14,6 @@ import java.time.OffsetDateTime;
  *
  * @author Sergei_Konilov
  */
-@Getter
-@RequiredArgsConstructor
 @Accessors(chain = true)
-public class ErrorResponse {
-    private final String error;
-    private final String message;
-    private final String path;
-    private final Integer status;
-    private final OffsetDateTime timestamp;
+public record ErrorResponse(String error, String message, String path, Integer status, OffsetDateTime timestamp) {
 }

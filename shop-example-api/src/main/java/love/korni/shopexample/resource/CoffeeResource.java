@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -104,8 +106,8 @@ public interface CoffeeResource {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
     })
-    @PostMapping(value = "/img/{id}", consumes = MediaType.IMAGE_JPEG_VALUE)
-    ResponseEntity<?> addCoffeeImg(@PathVariable Long id, @RequestBody byte[] img);
+    @PostMapping(value = "/img/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<?> addCoffeeImg(@PathVariable Long id, @RequestParam("file") MultipartFile file);
 
     @Operation(summary = "Update coffee", description = "Security: ADMIN",
             security = @SecurityRequirement(name = "basicSecurity"))

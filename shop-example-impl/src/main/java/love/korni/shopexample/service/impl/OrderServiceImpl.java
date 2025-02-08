@@ -1,6 +1,7 @@
 package love.korni.shopexample.service.impl;
 
 import love.korni.shopexample.domain.entity.Order;
+import love.korni.shopexample.domain.enums.OrderStatus;
 import love.korni.shopexample.exception.EntityNotFoundException;
 import love.korni.shopexample.exception.ValidationException;
 import love.korni.shopexample.payment.PaymentService;
@@ -40,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order find(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        if (Order.OrderStatus.DELETED == order.getStatus()) {
+        if (OrderStatus.DELETED == order.getStatus()) {
             return null;
         }
         return order;
@@ -49,37 +50,37 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> find(String username) {
         List<Order> orders = orderRepository.findByUserName(username);
-        return orders.stream().filter(order -> Order.OrderStatus.DELETED != order.getStatus()).collect(Collectors.toList());
+        return orders.stream().filter(order -> OrderStatus.DELETED != order.getStatus()).collect(Collectors.toList());
     }
 
     @Override
     public List<Order> findAll() {
         List<Order> orders = orderRepository.findAll();
-        return orders.stream().filter(order -> Order.OrderStatus.DELETED != order.getStatus()).collect(Collectors.toList());
+        return orders.stream().filter(order -> OrderStatus.DELETED != order.getStatus()).collect(Collectors.toList());
     }
 
     @Override
     public Order update(Order order) {
         find(order.getId());
         if (order.getCoffees().isEmpty()) throw new ValidationException("Order cannot be empty. Add some coffee.");
-        if (Order.OrderStatus.NEW != order.getStatus()) throw new ValidationException("You cannot update confirmed orders");
+        if (OrderStatus.NEW != order.getStatus()) throw new ValidationException("You cannot update confirmed orders");
         return orderRepository.save(order);
     }
 
     @Override
     public void delete(Long id) {
         Order order = find(id);
-        if (Order.OrderStatus.NEW != order.getStatus() || Order.OrderStatus.WAIT_PAYMENT != order.getStatus())
+        if (OrderStatus.NEW != order.getStatus() || OrderStatus.WAIT_PAYMENT != order.getStatus())
             throw new ValidationException("You cannot delete a paid order");
-        order.setStatus(Order.OrderStatus.DELETED);
+        order.setStatus(OrderStatus.DELETED);
         orderRepository.save(order);
     }
 
     @Override
     public Order confirm(Long id) {
         Order order = find(id);
-        if (Order.OrderStatus.NEW != order.getStatus()) throw new ValidationException("OrderStatus must be NEW");
-        order.setStatus(Order.OrderStatus.WAIT_PAYMENT);
+        if (OrderStatus.NEW != order.getStatus()) throw new ValidationException("OrderStatus must be NEW");
+        order.setStatus(OrderStatus.WAIT_PAYMENT);
         Order save = orderRepository.save(order);
         paymentService.payment(save);
         return save;
